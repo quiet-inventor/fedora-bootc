@@ -14,5 +14,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Run a one-line script
-        run: echo "Hello, ${{ github.event.inputs.environment }}!"
+      - name: Setup Podman
+        run: |
+          sudo apt update
+          sudo apt-get -y install podman
+      - name: Pull image
+        run: sudo podman pull ghcr.io/quiet-inventor/bootc-example:latest
