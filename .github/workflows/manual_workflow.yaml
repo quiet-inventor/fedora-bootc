@@ -20,3 +20,34 @@ jobs:
           sudo apt-get -y install podman
       - name: Pull image
         run: sudo podman pull ghcr.io/quiet-inventor/bootc-example:latest
+      - name: Create Image
+        run: |
+          mkdir -p $HOME/output &&
+          sudo podman \
+          run \
+          --rm \
+          --name \
+          bootc-example-bootc-image-builder \
+          --tty \
+          --privileged \
+          --security-opt \
+          label=type:unconfined_t \
+          -v \
+          $HOME/output:/output/ \
+          -v \
+          /var/lib/containers/storage:/var/lib/containers/storage \
+          --label \
+          bootc.image.builder=true \
+          quay.io/centos-bootc/bootc-image-builder:sha256-b4eb0793837e627b5cd08bbb641ddf7f22b013d5d2f4d7d593ca6261f2126550 \
+          ghcr.io/quiet-inventor/bootc-example:latest \
+          --output \
+          /output/ \
+          --local \
+          --type \
+          qcow2 \
+          --target-arch \
+          amd64 \
+          --rootfs \
+          btrfs \
+          --chown \
+          1000:1000
